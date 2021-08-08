@@ -4,6 +4,12 @@ import Counters from "./components/counters";
 import React, { Component } from "react";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.originalCounters = [...this.state.counters];
+    this.counterDeleted = [];
+  }
+
   state = {
     counters: [
       { id: 1, value: 4 },
@@ -25,13 +31,31 @@ class App extends Component {
 
   handleDelete = (counterId) => {
     const counters = this.state.counters.filter((c) => c.id !== counterId);
+    const objectDeleted = this.state.counters.find((c) => c.id === counterId);
     this.setState({ counters });
+    this.counterDeleted.push(objectDeleted);
   };
 
   handleReset = () => {
     const counters = this.state.counters.map((counter) => {
       return { id: counter.id, value: 0 };
     });
+    this.setState({ counters });
+  };
+
+  handleRestore = () => {
+    if (this.counterDeleted.length > 0) {
+      this.state.counters.push(this.counterDeleted.shift());
+      const counters = [...this.state.counters];
+      this.setState({ counters });
+    } else {
+      throw "Number of Button is limited";
+    }
+  };
+
+  handleRestart = () => {
+    const counters = [...this.originalCounters];
+    this.counterDeleted = [];
     this.setState({ counters });
   };
 
@@ -47,6 +71,8 @@ class App extends Component {
             onReset={this.handleReset}
             onDelete={this.handleDelete}
             onIncrement={this.handleIncrement}
+            onRestore={this.handleRestore}
+            onRestart={this.handleRestart}
           />
         </main>
       </React.Fragment>

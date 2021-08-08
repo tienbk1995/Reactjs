@@ -10,14 +10,12 @@ class Counter extends Component {
     super(props);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log("prevProps", prevProps);
-    console.log("prevState", this.props.counter.value);
-  }
-
   render() {
     return (
       <React.Fragment>
+        <span className="btn btn-secondary btn-sm m-2">
+          {this.props.counter.id}
+        </span>
         <span className={this.getBadgeClasses()}>{this.formatCount()}</span>
         <button
           onClick={() => this.props.onIncrement(this.props.counter)}
